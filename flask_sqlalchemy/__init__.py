@@ -593,7 +593,10 @@ class _BoundDeclarativeMeta(DeclarativeMeta):
         # if tablename is set explicitly, move it to the cache attribute so
         # that future subclasses still have auto behavior
         if '__tablename__' in d:
-            d['_cached_tablename'] = d.pop('__tablename__')
+            table = d['__tablename__']
+            if not isinstance(table, declared_attr):
+                d.pop('__tablename__')
+            d['_cached_tablename'] = table
 
         return DeclarativeMeta.__new__(cls, name, bases, d)
 
